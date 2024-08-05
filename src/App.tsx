@@ -1,12 +1,22 @@
-// import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
+import { Progress } from "./components/ui/progress";
 
 function App() {
   const [data, setData] = useState<any[]>([]);
-  const [sum, setSum] = useState<number>(0);
+  const [stok, setStok] = useState<number>(0);
   const [income, setIncome] = useState<number>(0);
+
+  const MARGIN = 2000; //keuntungan yang diambil tiap transaksi
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,29 +37,43 @@ function App() {
   };
 
   const calculateSum = (data: any[]) => {
-    let total = 0;
+    let stok = 0;
     let income = 0;
     data.forEach((row) => {
       const roundedPrice = Math.floor(row.Harga / 1000) * 1000; // Membulatkan ke bawah ke ribuan terdekat
-      const adjustedPrice = roundedPrice + 2000; // Menambahkan 2
+      const adjustedPrice = roundedPrice + MARGIN;
       income += adjustedPrice; // Menjumlahkan hasilnya
-      total += row.Harga;
+      stok += row.Harga;
     });
-    setSum(total);
+    setStok(stok);
     setIncome(income);
   };
 
   return (
     <>
       <div className="min-h-screen flex items-center justify-center">
-        <div>
+        <div className=" space-y-4">
           <div className="flex gap-2">
-            <Input type="file" onChange={handleFileUpload} />
+            <Input type="file" onChange={handleFileUpload} accept=".xlsx" />
           </div>
-          <h2>Total Saldo Rp {sum.toLocaleString("id-ID")}</h2>
-          <h2>Total Penghasilan Rp {income.toLocaleString("id-ID")}</h2>
-          <h2>Total Pesanan {data.length}</h2>
-          <h2>Keuntungan Rp {(income - sum).toLocaleString("id-ID")}</h2>
+
+          <Card x-chunk="dashboard-05-chunk-1">
+            <CardHeader className="pb-2">
+              <CardDescription>Total Income</CardDescription>
+              <CardTitle className="text-4xl">
+                Rp {income.toLocaleString("id-ID")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xs text-muted-foreground">
+                +{(income - stok).toLocaleString("id-ID")} from stok{" "}
+                {stok.toLocaleString("id-ID")}
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Progress value={(stok / income) * 100} />
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </>
