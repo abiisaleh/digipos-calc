@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { Progress } from "./components/ui/progress";
+import { Users } from "lucide-react";
+import { Badge } from "./components/ui/badge";
 
 function App() {
   const [data, setData] = useState<any[]>([]);
@@ -59,7 +61,16 @@ function App() {
 
           <Card x-chunk="dashboard-05-chunk-1">
             <CardHeader className="pb-2">
-              <CardDescription>Total Income</CardDescription>
+              <CardDescription>
+                <div className="flex justify-between">
+                  <div>Total Income</div>
+
+                  <Badge variant="secondary">
+                    {data.length} <Users className="ms-1 size-3 text-black" />
+                  </Badge>
+                  {/* <div className="flex gap-1 items-center"></div> */}
+                </div>
+              </CardDescription>
               <CardTitle className="text-4xl">
                 Rp {income.toLocaleString("id-ID")}
               </CardTitle>
