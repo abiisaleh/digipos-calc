@@ -85,6 +85,13 @@ function App() {
               <Progress value={(stok / income) * 100} />
             </CardFooter>
           </Card>
+
+          <p className="text-center text-gray-500 text-sm">
+            made by{" "}
+            <a href="https://abiisaleh.xyz" className="font-medium">
+              abiisaleh
+            </a>
+          </p>
         </div>
       </div>
     </>
