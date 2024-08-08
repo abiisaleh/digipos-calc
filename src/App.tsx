@@ -10,19 +10,40 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { Progress } from "./components/ui/progress";
-import { Users } from "lucide-react";
+import { Calendar, CalendarDays, Users } from "lucide-react";
 import { Badge } from "./components/ui/badge";
+import { Alert, AlertTitle } from "./components/ui/alert";
+import { id } from "date-fns/locale";
+import { parse, format } from "date-fns";
 
 function App() {
   const [data, setData] = useState<any[]>([]);
   const [stok, setStok] = useState<number>(0);
   const [income, setIncome] = useState<number>(0);
 
+  const [from, setFrom] = useState<string>("0");
+  const [until, setUntil] = useState<string>("0");
+
   const MARGIN = 2000; //keuntungan yang diambil tiap transaksi
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
+      const date = file.name.split("_");
+
+      setFrom(() => {
+        const rawDate = date[1];
+        const parsedDate = parse(rawDate, "yyyyMMdd", new Date());
+        return format(parsedDate, "dd MMM yyyy", { locale: id });
+      });
+
+      setUntil(() => {
+        const rawDate = date[2];
+        const parsedDate = parse(rawDate, "yyyyMMdd", new Date());
+        return format(parsedDate, "dd MMM yyyy", { locale: id });
+      });
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const binaryStr = e.target?.result;
@@ -59,6 +80,17 @@ function App() {
             <Input type="file" onChange={handleFileUpload} accept=".xlsx" />
           </div>
 
+          <div className="flex gap-2 text-xs">
+            <Alert>
+              <Calendar className="size-4" />
+              <AlertTitle>{from}</AlertTitle>
+            </Alert>
+            <Alert>
+              <CalendarDays className="size-4" />
+              <AlertTitle>{until}</AlertTitle>
+            </Alert>
+          </div>
+
           <Card x-chunk="dashboard-05-chunk-1">
             <CardHeader className="pb-2">
               <CardDescription>
@@ -68,7 +100,6 @@ function App() {
                   <Badge variant="secondary">
                     {data.length} <Users className="ms-1 size-3 text-black" />
                   </Badge>
-                  {/* <div className="flex gap-1 items-center"></div> */}
                 </div>
               </CardDescription>
               <CardTitle className="text-4xl">
