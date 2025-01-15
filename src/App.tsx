@@ -24,7 +24,7 @@ function App() {
   const [from, setFrom] = useState<string>("0");
   const [until, setUntil] = useState<string>("0");
 
-  const MARGIN = 2000; //keuntungan yang diambil tiap transaksi
+  const MARGIN = 3000; //keuntungan yang diambil tiap transaksi
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
