@@ -136,7 +136,7 @@ function App() {
 
           <p className="text-center text-gray-500 text-sm">
             made by{" "}
-            <a href="https://abiisaleh.xyz" className="font-medium">
+            <a href="https://abiisaleh.github.io" className="font-medium">
               abiisaleh
             </a>
           </p>
