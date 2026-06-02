@@ -23,8 +23,7 @@ function App() {
 
   const [from, setFrom] = useState<string>("0");
   const [until, setUntil] = useState<string>("0");
-
-  const MARGIN = 5000; //keuntungan yang diambil tiap transaksi
+  const [margin, setMargin] = useState<number>(5000); //keuntungan yang diambil tiap transaksi
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -59,12 +58,20 @@ function App() {
     }
   };
 
-  const calculateSum = (data: any[]) => {
+  const handleMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMargin = parseInt(event.target.value) || 0;
+    setMargin(newMargin);
+    if (data.length > 0) {
+      calculateSum(data, newMargin);
+    }
+  };
+
+  const calculateSum = (data: any[], currentMargin: number = margin) => {
     let stok = 0;
     let income = 0;
     data.forEach((row) => {
       const roundedPrice = Math.floor(row.Harga / 1000) * 1000; // Membulatkan ke bawah ke ribuan terdekat
-      const adjustedPrice = roundedPrice + MARGIN;
+      const adjustedPrice = roundedPrice + currentMargin;
       income += adjustedPrice; // Menjumlahkan hasilnya
       stok += row.Harga;
     });
@@ -78,6 +85,16 @@ function App() {
         <div className=" space-y-4">
           <div className="flex gap-2">
             <Input type="file" onChange={handleFileUpload} accept=".xlsx" />
+          </div>
+
+          <div className="flex gap-2">
+            <Input 
+              type="number" 
+              placeholder="Masukkan margin (Rp)" 
+              value={margin}
+              onChange={handleMarginChange}
+              className="flex-1"
+            />
           </div>
 
           <div className="flex gap-2 text-xs">
